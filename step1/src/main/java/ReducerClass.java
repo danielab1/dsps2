@@ -1,5 +1,5 @@
 
-import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.IOException;
@@ -36,13 +36,13 @@ public class ReducerClass extends Reducer<TripleKey, TripleValue, TripleKey, Tri
 
         else if (key.getThirdWord().equals("~")) {
             // <w1,w2,~>
-            tripleValue.setC1(new IntWritable(wordOccurrences));
-            tripleValue.setC0(new IntWritable(C0));
+            tripleValue.setC1(new LongWritable(wordOccurrences));
+            tripleValue.setC0(new LongWritable(C0));
         }
             // <w1,w2,w3>
         else {
-            tripleValue.setN1(new IntWritable());
-            tripleValue.setC0(new IntWritable(C0));
+            tripleValue.setN1(new LongWritable(wordOccurrences));
+            tripleValue.setC0(new LongWritable(C0));
         }
 
         if (!(key.getSecondWord().equals("~")) && !(key.getFirstWord().equals("$")))
