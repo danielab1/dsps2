@@ -1,0 +1,81 @@
+import org.apache.commons.text.StringTokenizer;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Mapper;
+
+import java.io.IOException;
+
+public class MapperClass extends Mapper<LongWritable, Text, TripleKey, TripleValue> {
+
+    private static long C0;
+    private  static final int NUM_OF_REDUCERS = 20 ;
+
+
+
+    protected void setup(Context context) {
+        Configuration conf = context.getConfiguration();
+        C0 = 0;
+    }
+
+    public void map(LongWritable key, Text value, Context context) throws IOException,  InterruptedException {
+        // value: n-gram \t year \t occurrences \t volume_count \n
+        // tokenize the value using tab delimiter
+        StringTokenizer itr = new StringTokenizer(value.toString(), "\t");
+
+        // parse the n-gram
+        String ngram = itr.nextToken();
+
+        // filter only ngrams that contain non-alphabetic characters
+        if (!onlyLettersAndSpace(ngram)) {
+            return;
+        }
+        //ignore the year
+        itr.nextToken();
+        // parse the occurrences
+        LongWritable occurrences = new LongWritable(Long.parseLong(itr.nextToken()));
+
+        // split n-gram to one/two words/three words
+        String[] ngramArray = ngram.split(" ");
+
+        if (ngramArray.length == 1) { // 1-gram
+                context.write(new TripleKey(new Text(ngramArray[0]), new Text("~"), new Text("~")),
+                        new TripleValue(occurrences));
+            C0 = C0 + occurrences.get();
+            }
+     else if (ngramArray.length==2) { // 2-gram
+            context.write(new TripleKey(new Text(ngramArray[0]),new Text(ngramArray[1]),new Text("~")),
+                    new TripleValue(occurrences));
+        }
+
+     else { //3-gram
+            context.write(new TripleKey(new Text(ngramArray[0]),new Text(ngramArray[1]),new Text(ngramArray[2])),
+                    new TripleValue(occurrences));
+        }
+
+
+
+        }
+
+    @Override
+    protected void cleanup(Context context) throws IOException, InterruptedException {
+        for(int i=0; i< NUM_OF_REDUCERS ; i++) {
+            context.write(new TripleKey(new Text("$"), new Text(String.valueOf(i)), new Text("$")),
+                    new TripleValue(new LongWritable(C0)));
+        }
+    }
+
+    private boolean onlyLettersAndSpace(String ngram) {
+        for(char i = 1488 ; i < 1514 ; i++) {
+            if (ngram.indexOf(i) >0) {
+               return true;
+            }
+        }
+        return false;
+    }
+}
+
+
+
+
