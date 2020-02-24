@@ -12,7 +12,7 @@ public class Step4 {
 
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
-        Job job = new Job(conf, "finalSort");
+        Job job = Job.getInstance(conf, "finalSort");
         job.setJarByClass(SortingKey.class);
         job.setOutputKeyClass(SortingKey.class);
         job.setOutputValueClass(Text.class);
