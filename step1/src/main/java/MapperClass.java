@@ -38,7 +38,7 @@ public class MapperClass extends Mapper<LongWritable, Text, TripleKey, TripleVal
         if (ngramArray.length == 1) { // 1-gram
                 context.write(new TripleKey(new Text(ngramArray[0]), new Text("~"), new Text("~")),
                         new TripleValue(occurrences));
-            C0 = C0 + occurrences.get();
+                C0 = C0 + occurrences.get();
             }
      else if (ngramArray.length==2) { // 2-gram
             context.write(new TripleKey(new Text(ngramArray[0]),new Text(ngramArray[1]),new Text("~")),

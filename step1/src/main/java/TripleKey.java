@@ -7,26 +7,27 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 
-class TripleKey implements  WritableComparable<TripleKey> {
+class TripleKey implements WritableComparable<TripleKey> {
 
     private Text firstWord;
     private Text secondWord;
     private Text thirdWord;
 
-    public TripleKey(Text firstWord, Text secondWord, Text thirdWord){
+    public TripleKey(Text firstWord, Text secondWord, Text thirdWord) {
         this.firstWord = firstWord;
         this.secondWord = secondWord;
         this.thirdWord = thirdWord;
     }
 
-    public TripleKey(Text firstWord, Text secondWord){
-        this(firstWord,secondWord, new Text("~"));
+    public TripleKey(Text firstWord, Text secondWord) {
+        this(firstWord, secondWord, new Text("~"));
     }
 
-    public TripleKey(Text firstWord){
+    public TripleKey(Text firstWord) {
         this(firstWord, new Text("~"), new Text("~"));
     }
-    public TripleKey(){
+
+    public TripleKey() {
         this(new Text(""), new Text(""), new Text(""));
     }
 
@@ -45,48 +46,52 @@ class TripleKey implements  WritableComparable<TripleKey> {
 
 
     // we want to sort the word so that every <w2,w3> and <w1,w2,w3> will be after <w3,*>
-    public int compareTo(TripleKey other){
+    public int compareTo(TripleKey other) {
 
+        if ((isDollar(this.firstWord)) && (isDollar(other.firstWord))) {
+            return 0;
+
+        }
         // case of c0
-        if(isDollar(this.firstWord)){
+        if (isDollar(this.firstWord)) {
             return -1;
         }
-        if(isDollar(other.firstWord)){
+        if (isDollar(other.firstWord)) {
             return 1;
         }
 
         // case this is < w1 ~ ~ >
-        if(isTilda(this.secondWord)) {
+        if (isTilda(this.secondWord)) {
             // other is <w ~ ~ >
-            if(isTilda(other.secondWord))
+            if (isTilda(other.secondWord))
                 return this.firstWord.toString().compareTo(other.firstWord.toString());
             // case other is <w1, w2, ~>
-            if (isTilda(other.thirdWord)){
+            if (isTilda(other.thirdWord)) {
                 //and other w2 == this w1
-                if (other.secondWord.toString().equals(this.firstWord.toString())){
+                if (other.secondWord.toString().equals(this.firstWord.toString())) {
                     return -1;
                 }
                 return this.firstWord.toString().compareTo(other.secondWord.toString());
             }
 
             // case other <wx,w2,w3> , and other.w3 = this.w1
-            if(other.thirdWord.toString().equals(this.firstWord.toString()))
-                    return -1;
+            if (other.thirdWord.toString().equals(this.firstWord.toString()))
+                return -1;
             // case other <wx,wy,wz> and other wz ! = this.w1
             return this.firstWord.toString().compareTo(other.thirdWord.toString());
         }
         //case this <w1, w2,~>
-        else if(isTilda(this.thirdWord)) {
+        else if (isTilda(this.thirdWord)) {
             // case other <wx,~,~> and wx = w2
-            if(isTilda(other.secondWord)){
-                if(other.firstWord.toString().equals(this.secondWord.toString()))
+            if (isTilda(other.secondWord)) {
+                if (other.firstWord.toString().equals(this.secondWord.toString()))
                     return 1;
                 return this.secondWord.toString().compareTo(other.firstWord.toString());
             }
             //case other <wx,wy,~>
-            if(isTilda(other.thirdWord)){
-                if(other.secondWord.toString().equals(this.secondWord.toString()))
-                    return 0;
+            if (isTilda(other.thirdWord)) {
+                if (other.secondWord.toString().equals(this.secondWord.toString()))
+                    return this.firstWord.toString().compareTo(other.firstWord.toString());
                 else return this.secondWord.toString().compareTo(other.secondWord.toString());
 
             }
@@ -107,33 +112,40 @@ class TripleKey implements  WritableComparable<TripleKey> {
                 else return this.thirdWord.toString().compareTo(other.firstWord.toString());
             }
             // other is <wx,wy,~>
-            if(isTilda(other.thirdWord)){
+            if (isTilda(other.thirdWord)) {
                 // other.w2 == this.w3
-                if(this.thirdWord.toString().equals(other.secondWord.toString()))
+                if (this.thirdWord.toString().equals(other.secondWord.toString()))
                     return 1;
                 // other.w2!=this.w3
-               return this.thirdWord.toString().compareTo(other.secondWord.toString());
+                return this.thirdWord.toString().compareTo(other.secondWord.toString());
             }
             //other is <wx,wy,wz>
+            if (this.thirdWord.toString().equals(other.thirdWord.toString())) {
+                if (this.secondWord.toString().equals(other.secondWord.toString()))
+                    return this.firstWord.toString().compareTo(other.firstWord.toString());
+                else return this.secondWord.toString().compareTo(other.secondWord.toString());
+            }
             return this.thirdWord.toString().compareTo(this.thirdWord.toString());
         }
     }
 
-    public String getFirstWord(){
+    public String getFirstWord() {
         return this.firstWord.toString();
     }
 
-    public String getSecondWord(){
+    public String getSecondWord() {
         return this.secondWord.toString();
     }
 
-    public String getThirdWord(){
+    public String getThirdWord() {
         return this.thirdWord.toString();
     }
-    private boolean isTilda(Text word){
+
+    private boolean isTilda(Text word) {
         return word.toString().equals("~");
     }
-    private boolean isDollar(Text word){
+
+    private boolean isDollar(Text word) {
         return word.toString().equals("$");
     }
 
