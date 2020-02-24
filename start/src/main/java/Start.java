@@ -9,17 +9,23 @@ import java.util.List;
 public class Start {
 
     private static final String REGION = "us-west-2";
-
+    private static final String EC2_KEY_NAME = "dsps-ass2";
     private static final String BUCKET_NAME = "assignment2-dsps-2";
     private static final String BUCKET_URL = "s3n://" + BUCKET_NAME + "/";
     private static final String LOG_DIR = BUCKET_URL + "logs/";
+    private static final String INSTANCE_TYPE = InstanceType.M4Large.toString();
 
-    private static final String ONE_GRAM_URL_HEB = "s3n://datasets.elasticmapreduce/"
-            + "ngrams/books/20090715/heb-all/1gram/data";
-    private static final String TWO_GRAM_URL_HEB = "s3n://datasets.elasticmapreduce/"
-            + "ngrams/books/20090715/heb-all/2gram/data";
-    private static final String THREE_GRAM_URL_HEB = "s3n://datasets.elasticmapreduce/"
-            + "ngrams/books/20090715/heb-all/3gram/data";
+//    private static final String ONE_GRAM_URL_HEB = "s3n://datasets.elasticmapreduce/"
+//            + "ngrams/books/20090715/heb-all/1gram/data";
+//    private static final String TWO_GRAM_URL_HEB = "s3n://datasets.elasticmapreduce/"
+//            + "ngrams/books/20090715/heb-all/2gram/data";
+//    private static final String THREE_GRAM_URL_HEB = "s3n://datasets.elasticmapreduce/"
+//            + "ngrams/books/20090715/heb-all/3gram/data";
+
+    private static final String ONE_GRAM_URL_HEB = "s3n://assignment2-dsps-2/tests/1gram.txt";
+
+    private static final String TWO_GRAM_URL_HEB = "s3n://assignment2-dsps-2/tests/mini_corpus_2_grams copy.txt";
+    private static final String THREE_GRAM_URL_HEB = "s3n://assignment2-dsps-2/tests/mini_corpus_3_grams.txt";
 
 
     private static final String STEP1_JAR = BUCKET_URL + "jars/step1.jar";
@@ -47,13 +53,7 @@ public class Start {
         twoGramURL = TWO_GRAM_URL_HEB;
         threeGramURL = THREE_GRAM_URL_HEB;
 
-    // Configure step 0 to enable debugging
-//    StepConfig stepConfigDebug = new StepConfig()
-//            .withName("Enable Debugging")
-//            .withActionOnFailure("TERMINATE_JOB_FLOW")
-//            .withHadoopJarStep(new HadoopJarStepConfig()
-//                    .withJar("command-runner.jar")
-//                    .withArgs("state-pusher-script"));
+
 
     // Configure first step, input is 1-gram, 2-gram
     StepConfig stepConfig1 = new StepConfig()
@@ -61,6 +61,7 @@ public class Start {
             .withActionOnFailure("TERMINATE_JOB_FLOW")
             .withHadoopJarStep(new HadoopJarStepConfig()
                     .withJar(STEP1_JAR)
+                    .withMainClass("Step1")
                     .withArgs(oneGramURL, twoGramURL,threeGramURL , STEP1_OUTPUT));
 
     // Configure second step, input is the output of first step
@@ -69,6 +70,7 @@ public class Start {
             .withActionOnFailure("TERMINATE_JOB_FLOW")
             .withHadoopJarStep(new HadoopJarStepConfig()
                     .withJar(STEP2_JAR)
+                    .withMainClass("Step2")
                     .withArgs(STEP1_OUTPUT, STEP2_OUTPUT));
 
     // Configure third step, input is the output of second step
@@ -77,6 +79,7 @@ public class Start {
             .withActionOnFailure(ActionOnFailure.TERMINATE_JOB_FLOW)
             .withHadoopJarStep(new HadoopJarStepConfig()
                     .withJar(STEP3_JAR)
+                    .withMainClass("Step3")
                     .withArgs(STEP2_OUTPUT, STEP3_OUTPUT));
 
 
@@ -84,17 +87,18 @@ public class Start {
 
         JobFlowInstancesConfig instances = new JobFlowInstancesConfig()
                 .withInstanceCount(2)
-                .withMasterInstanceType(InstanceType.M1Medium.toString())
-                .withSlaveInstanceType(InstanceType.M1Medium.toString())
-                .withHadoopVersion("2.10.0").withEc2KeyName("ec2")
+                .withMasterInstanceType(INSTANCE_TYPE)
+                .withSlaveInstanceType(INSTANCE_TYPE)
+                .withHadoopVersion("2.10.0").withEc2KeyName(EC2_KEY_NAME)
                 .withKeepJobFlowAliveWhenNoSteps(false)
                 .withPlacement(new PlacementType("us-west-2a"));
 
     // Create a flow request including all the Steps
         RunJobFlowRequest runFlowRequest = new RunJobFlowRequest()
-                .withName("start")
+                .withName("start_now")
                 .withInstances(instances)
-                .withSteps(stepConfig1,stepConfig2,stepConfig3)
+//                .withSteps(stepConfig1,stepConfig2,stepConfig3)
+                .withSteps(stepConfig1)
                 .withReleaseLabel("emr-5.20.0")
                 .withLogUri(LOG_DIR)
                 .withServiceRole("EMR_DefaultRole")

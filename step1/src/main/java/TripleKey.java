@@ -26,6 +26,9 @@ class TripleKey implements  WritableComparable<TripleKey> {
     public TripleKey(Text firstWord){
         this(firstWord, new Text("~"), new Text("~"));
     }
+    public TripleKey(){
+        this(new Text(""), new Text(""), new Text(""));
+    }
 
 
     public void readFields(DataInput in) throws IOException {
@@ -67,7 +70,7 @@ class TripleKey implements  WritableComparable<TripleKey> {
             }
 
             // case other <wx,w2,w3> , and other.w3 = this.w1
-            if(other.thirdWord.toString().equals(this.thirdWord.toString()))
+            if(other.thirdWord.toString().equals(this.firstWord.toString()))
                     return -1;
             // case other <wx,wy,wz> and other wz ! = this.w1
             return this.firstWord.toString().compareTo(other.thirdWord.toString());

@@ -1,10 +1,13 @@
 
+import org.apache.commons.lang3.tuple.Triple;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.IOException;
 
-public class ReducerClass extends Reducer<TripleKey, TripleValue, TripleKey, TripleValue> {
+public class ReducerClass extends Reducer<TripleKey, TripleValue, Text, Text> {
     private long wordOccurrences;
     private long C0;
 
@@ -16,8 +19,6 @@ public class ReducerClass extends Reducer<TripleKey, TripleValue, TripleKey, Tri
     }
 
     @Override
-
-
     public void reduce(TripleKey key, Iterable<TripleValue> values, Context context)
             throws IOException, InterruptedException {
 
@@ -45,10 +46,9 @@ public class ReducerClass extends Reducer<TripleKey, TripleValue, TripleKey, Tri
             tripleValue.setC0(new LongWritable(C0));
         }
 
-        if (!(key.getSecondWord().equals("~")) && !(key.getFirstWord().equals("$")))
-            context.write(key, tripleValue);
+//        if (!(key.getSecondWord().equals("~")) && !(key.getFirstWord().equals("$")))
+            context.write(new Text(key.toString()),new Text(tripleValue.toString()));
 
     }
 
 }
-

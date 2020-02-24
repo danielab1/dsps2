@@ -1,3 +1,5 @@
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Partitioner;
 
 public class PartitionerClass extends Partitioner<TripleKey,TripleValue> {
@@ -10,5 +12,7 @@ public class PartitionerClass extends Partitioner<TripleKey,TripleValue> {
         else if(!tripleKey.getThirdWord().equals("$"))
             return Math.abs(tripleKey.getThirdWord().hashCode()) % numPartitions;
         else return Integer.parseInt(tripleKey.getSecondWord());
+
+
     }
 }

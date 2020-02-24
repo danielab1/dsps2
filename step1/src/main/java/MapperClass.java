@@ -4,15 +4,13 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
-
 import java.io.IOException;
+import java.util.Arrays;
 
 public class MapperClass extends Mapper<LongWritable, Text, TripleKey, TripleValue> {
 
     private static long C0;
-    private  static final int NUM_OF_REDUCERS = 20 ;
-
-
+    private  static final int NUM_OF_REDUCERS = 2;
 
     protected void setup(Context context) {
         Configuration conf = context.getConfiguration();
@@ -22,19 +20,17 @@ public class MapperClass extends Mapper<LongWritable, Text, TripleKey, TripleVal
     public void map(LongWritable key, Text value, Context context) throws IOException,  InterruptedException {
         // value: n-gram \t year \t occurrences \t volume_count \n
         // tokenize the value using tab delimiter
-        StringTokenizer itr = new StringTokenizer(value.toString(), "\t");
+
+        String[] split_line = value.toString().split("\t");
+
+
 
         // parse the n-gram
-        String ngram = itr.nextToken();
+        String ngram = split_line[0];
 
-        // filter only ngrams that contain non-alphabetic characters
-        if (!onlyLettersAndSpace(ngram)) {
-            return;
-        }
-        //ignore the year
-        itr.nextToken();
         // parse the occurrences
-        LongWritable occurrences = new LongWritable(Long.parseLong(itr.nextToken()));
+
+        LongWritable occurrences = new LongWritable(Long.parseLong(split_line[2]));
 
         // split n-gram to one/two words/three words
         String[] ngramArray = ngram.split(" ");
@@ -64,18 +60,7 @@ public class MapperClass extends Mapper<LongWritable, Text, TripleKey, TripleVal
             context.write(new TripleKey(new Text("$"), new Text(String.valueOf(i)), new Text("$")),
                     new TripleValue(new LongWritable(C0)));
         }
-    }
+   }
 
-    private boolean onlyLettersAndSpace(String ngram) {
-        for(char i = 1488 ; i < 1514 ; i++) {
-            if (ngram.indexOf(i) >0) {
-               return true;
-            }
-        }
-        return false;
-    }
+
 }
-
-
-
-

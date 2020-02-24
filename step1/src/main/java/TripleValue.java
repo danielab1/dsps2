@@ -116,4 +116,9 @@ public class TripleValue implements Writable {
         return new LongWritable(value1.get()+ value2.get());
     }
 
+    public String toString(){
+        return "occur:"+occurrences.get() +
+                " N1: " +N1.get()+ "  N2: " +N2.get() +" N3: " +N3.get() +" C0: " +C0.get()  +" C1: " +C1.get() +"  C2:" +C2.get() +"\n";
+    }
+
 }
