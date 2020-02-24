@@ -104,7 +104,7 @@ public class Start {
         RunJobFlowRequest runFlowRequest = new RunJobFlowRequest()
                 .withName("start_now")
                 .withInstances(instances)
-                .withSteps(stepConfig1,stepConfig2,stepConfig3,stepConfig4)
+//                .withSteps(stepConfig1,stepConfig2,stepConfig3,stepConfig4)
                 .withSteps(stepConfig1)
                 .withReleaseLabel("emr-5.20.0")
                 .withLogUri(LOG_DIR)

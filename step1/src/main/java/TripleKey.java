@@ -48,6 +48,7 @@ class TripleKey implements WritableComparable<TripleKey> {
     // we want to sort the word so that every <w2,w3> and <w1,w2,w3> will be after <w3,*>
     public int compareTo(TripleKey other) {
         System.out.println("this: ----- " + this.toString() + " other is: ---- " + other.toString());
+
         if ((isDollar(this.firstWord)) && (isDollar(other.firstWord))) {
             int a = 0;
             System.out.println("0 " + a);
@@ -78,7 +79,7 @@ class TripleKey implements WritableComparable<TripleKey> {
             // other is <w ~ ~ >
             if (isTilda(other.secondWord)) {
                 int a = this.firstWord.toString().compareTo(other.firstWord.toString());
-                ;
+
                 System.out.println("4" + a);
                 return a;
             }
@@ -88,12 +89,12 @@ class TripleKey implements WritableComparable<TripleKey> {
                 if (other.secondWord.toString().equals(this.firstWord.toString())) {
 
                     int a = -1;
-                    ;
+
                     System.out.println("5" + a);
                     return a;
                 }
                 int a = this.firstWord.toString().compareTo(other.secondWord.toString());
-                ;
+
                 System.out.println("6" + a);
                 return a;
             }
@@ -199,7 +200,7 @@ class TripleKey implements WritableComparable<TripleKey> {
                     return a;
                 }
             }
-            int a = this.thirdWord.toString().compareTo(this.thirdWord.toString());
+            int a = this.thirdWord.toString().compareTo(other.thirdWord.toString());
             System.out.println("20" + a);
             return a;
 
