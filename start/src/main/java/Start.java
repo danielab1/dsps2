@@ -31,10 +31,12 @@ public class Start {
     private static final String STEP1_JAR = BUCKET_URL + "jars/step1.jar";
     private static final String STEP2_JAR = BUCKET_URL + "jars/step2.jar";
     private static final String STEP3_JAR = BUCKET_URL + "jars/step3.jar";
+    private static final String STEP4_JAR = BUCKET_URL + "jars/step4.jar";
 
     private static final String STEP1_OUTPUT = BUCKET_URL + "step1output/";
     private static final String STEP2_OUTPUT = BUCKET_URL + "step2output/";
     private static final String STEP3_OUTPUT = BUCKET_URL + "step3output/";
+    private static final String STEP4_OUTPUT = BUCKET_URL + "step4output/";
 
     public static void main(String[] args) {
 
@@ -54,34 +56,39 @@ public class Start {
         threeGramURL = THREE_GRAM_URL_HEB;
 
 
+        // Configure first step, input is 1-gram, 2-gram
+        StepConfig stepConfig1 = new StepConfig()
+                .withName("step1")
+                .withActionOnFailure("TERMINATE_JOB_FLOW")
+                .withHadoopJarStep(new HadoopJarStepConfig()
+                        .withJar(STEP1_JAR)
+                        .withMainClass("Step1")
+                        .withArgs(oneGramURL, twoGramURL, threeGramURL, STEP1_OUTPUT));
 
-    // Configure first step, input is 1-gram, 2-gram
-    StepConfig stepConfig1 = new StepConfig()
-            .withName("step1")
-            .withActionOnFailure("TERMINATE_JOB_FLOW")
-            .withHadoopJarStep(new HadoopJarStepConfig()
-                    .withJar(STEP1_JAR)
-                    .withMainClass("Step1")
-                    .withArgs(oneGramURL, twoGramURL,threeGramURL , STEP1_OUTPUT));
+        // Configure second step, input is the output of first step
+        StepConfig stepConfig2 = new StepConfig()
+                .withName("step2")
+                .withActionOnFailure("TERMINATE_JOB_FLOW")
+                .withHadoopJarStep(new HadoopJarStepConfig()
+                        .withJar(STEP2_JAR)
+                        .withMainClass("Step2")
+                        .withArgs(STEP1_OUTPUT, STEP2_OUTPUT));
 
-    // Configure second step, input is the output of first step
-    StepConfig stepConfig2 = new StepConfig()
-            .withName("step2")
-            .withActionOnFailure("TERMINATE_JOB_FLOW")
-            .withHadoopJarStep(new HadoopJarStepConfig()
-                    .withJar(STEP2_JAR)
-                    .withMainClass("Step2")
-                    .withArgs(STEP1_OUTPUT, STEP2_OUTPUT));
-
-    // Configure third step, input is the output of second step
-    StepConfig stepConfig3 = new StepConfig()
-            .withName("step3")
-            .withActionOnFailure(ActionOnFailure.TERMINATE_JOB_FLOW)
-            .withHadoopJarStep(new HadoopJarStepConfig()
-                    .withJar(STEP3_JAR)
-                    .withMainClass("Step3")
-                    .withArgs(STEP2_OUTPUT, STEP3_OUTPUT));
-
+        // Configure third step, input is the output of second step
+        StepConfig stepConfig3 = new StepConfig()
+                .withName("step3")
+                .withActionOnFailure(ActionOnFailure.TERMINATE_JOB_FLOW)
+                .withHadoopJarStep(new HadoopJarStepConfig()
+                        .withJar(STEP3_JAR)
+                        .withMainClass("Step3")
+                        .withArgs(STEP2_OUTPUT, STEP3_OUTPUT));
+        StepConfig stepConfig4 = new StepConfig()
+                .withName("step4")
+                .withActionOnFailure(ActionOnFailure.TERMINATE_JOB_FLOW)
+                .withHadoopJarStep(new HadoopJarStepConfig()
+                        .withJar(STEP4_JAR)
+                        .withMainClass("Step4")
+                        .withArgs(STEP3_OUTPUT, STEP4_OUTPUT));
 
         System.out.println("Configured all Steps");
 
@@ -93,11 +100,11 @@ public class Start {
                 .withKeepJobFlowAliveWhenNoSteps(false)
                 .withPlacement(new PlacementType("us-west-2a"));
 
-    // Create a flow request including all the Steps
+        // Create a flow request including all the Steps
         RunJobFlowRequest runFlowRequest = new RunJobFlowRequest()
                 .withName("start_now")
                 .withInstances(instances)
-//                .withSteps(stepConfig1,stepConfig2,stepConfig3)
+                .withSteps(stepConfig1,stepConfig2,stepConfig3,stepConfig4)
                 .withSteps(stepConfig1)
                 .withReleaseLabel("emr-5.20.0")
                 .withLogUri(LOG_DIR)
@@ -107,9 +114,9 @@ public class Start {
 
         System.out.println("Created job flow request");
 
-    // Run the flow
+        // Run the flow
         RunJobFlowResult runJobFlowResult = mapReduce.runJobFlow(runFlowRequest);
         String jobFlowId = runJobFlowResult.getJobFlowId();
         System.out.println("Ran job flow with id: " + jobFlowId);
-}
+    }
 }

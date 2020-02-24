@@ -26,8 +26,8 @@ public class Step1 {
         job.setReducerClass(ReducerClass.class);
 
 
-        job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(Text.class);
+        job.setOutputKeyClass(TripleKey.class);
+        job.setOutputValueClass(TripleValue.class);
 
         job.setReducerClass(ReducerClass.class);
 

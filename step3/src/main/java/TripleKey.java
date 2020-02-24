@@ -43,40 +43,29 @@ public class TripleKey implements WritableComparable<TripleKey> {
 
     // we want to sort the word so that every <w2,w3> and <w1,w2,w3> will be after <w3,*>
     public int compareTo(TripleKey other) {
-
         // this <w1,w2,~>
         if (isTilda(this.thirdWord)) {
-            // other <w1,w2,~>
-            if (isTilda(other.thirdWord)) {
-                if (this.firstWord.toString().equals(other.firstWord.toString()))
-                    return this.secondWord.toString().compareTo(other.secondWord.toString());
-                else return this.firstWord.toString().compareTo(other.firstWord.toString());
-            }
-            // other is <w1, w2, w3>
-            if (this.firstWord.toString().equals(other.firstWord.toString())) {
-                //this.w2 = other.w2
-                if (this.secondWord.toString().equals(other.secondWord.toString()))
+            if (isTilda(other.thirdWord))
+                return this.toString().compareTo(other.toString());
+                // other is <w1,w2,w3>
+            else if (this.firstWord.toString().equals(other.secondWord.toString()))
+                if (this.secondWord.toString().equals(other.thirdWord.toString()))
                     return -1;
-                    // this.w2 != other.w2
-                else return this.secondWord.toString().compareTo(other.secondWord.toString());
-            }
-            // this.w1 != other.w1
-            else return this.firstWord.toString().compareTo(other.firstWord.toString());
-
-        }
-        // this <wx,wy,wz>
-        else {
-            // other <w1,w2,~>
+                else return this.secondWord.toString().compareTo(other.thirdWord.toString());
+            else return this.firstWord.toString().compareTo(other.secondWord.toString());
+        } else {// this <w1,w2,w3>
             if (isTilda(other.thirdWord)) {
-                // this.wx = other.w1
-                if (this.firstWord.toString().equals(other.firstWord.toString())) {
-                    if (this.secondWord.toString().equals(other.secondWord.toString()))
+                // other <w1,w2,~>
+                if (this.secondWord.toString().equals(other.firstWord.toString()))
+                    if (this.thirdWord.toString().equals(other.secondWord.toString()))
                         return 1;
-                    else return this.secondWord.toString().compareTo(other.secondWord.toString());
-                } else return this.firstWord.toString().compareTo(other.firstWord.toString());
-
-            } else return this.toString().compareTo(other.toString());
+                    else return this.thirdWord.toString().compareTo(other.secondWord.toString());
+                else return this.secondWord.toString().compareTo(other.firstWord.toString());
+            }else {
+                return (this.secondWord.toString() + this.thirdWord.toString()).compareTo((other.secondWord.toString() + other.thirdWord.toString()));// this <w1,w2,w3> <wx,wy,wz>
+            }
         }
+
     }
 
     public String getFirstWord() {
@@ -97,6 +86,6 @@ public class TripleKey implements WritableComparable<TripleKey> {
 
     @Override
     public String toString() {
-        return this.firstWord + " " + this.secondWord + " " + this.thirdWord;
+        return this.firstWord.toString() + " " + this.secondWord.toString() + " " + this.thirdWord.toString();
     }
 }

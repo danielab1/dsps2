@@ -46,7 +46,7 @@ public class ReducerClass extends Reducer<TripleKey, TripleValue, Text, Text> {
             tripleValue.setC0(new LongWritable(C0));
         }
 
-//        if (!(key.getSecondWord().equals("~")) && !(key.getFirstWord().equals("$")))
+        if (!(key.getSecondWord().equals("~")) && !(key.getFirstWord().equals("$")))
             context.write(new Text(key.toString()),new Text(tripleValue.toString()));
 
     }
