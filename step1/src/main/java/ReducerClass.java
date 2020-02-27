@@ -1,13 +1,11 @@
 
-import org.apache.commons.lang3.tuple.Triple;
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
+import java.io.EOFException;
 import java.io.IOException;
 
-public class ReducerClass extends Reducer<TripleKey, TripleValue, Text, Text> {
+public class ReducerClass extends Reducer<TripleKey, TripleValue, TripleKey, TripleValue> {
     private long wordOccurrences;
     private long C0;
 
@@ -17,37 +15,37 @@ public class ReducerClass extends Reducer<TripleKey, TripleValue, Text, Text> {
         wordOccurrences = 0;
         C0=0;
     }
-
+        // we calc N1,C1 for the words that correspond
     @Override
     public void reduce(TripleKey key, Iterable<TripleValue> values, Context context)
             throws IOException, InterruptedException {
 
+                TripleValue tripleValue = new TripleValue();
+                for (TripleValue value : values) {
+                    tripleValue.occurrences = tripleValue.Add(tripleValue.occurrences, value.occurrences);
+                    tripleValue.N1 = tripleValue.Add(tripleValue.N1, value.N1);
+                    tripleValue.C1 = tripleValue.Add(tripleValue.C1, value.C1);
+                }
+                if (key.getFirstWord().equals("$")) {
+                    C0 = tripleValue.occurrences.get();
+                }
+                if (key.getSecondWord().equals("~"))
+                    wordOccurrences = tripleValue.occurrences.get();
 
-        TripleValue tripleValue = new TripleValue();
-        for (TripleValue value : values) {
-            tripleValue.occurrences = tripleValue.Add(tripleValue.occurrences, value.occurrences);
-            tripleValue.N1 = tripleValue.Add(tripleValue.N1, value.N1);
-            tripleValue.C1 = tripleValue.Add(tripleValue.C1, value.C1);
-        }
-        if(key.getFirstWord().equals("$")){
-            C0=tripleValue.occurrences.get();
-        }
-        if (key.getSecondWord().equals("~"))
-            wordOccurrences = tripleValue.occurrences.get();
+                else if (key.getThirdWord().equals("~")) {
+                    // <w1,w2,~>
+                    tripleValue.setC1(new LongWritable(wordOccurrences));
+                    tripleValue.setC0(new LongWritable(C0));
+                }
+                // <w1,w2,w3>
+                else {
+                    tripleValue.setN1(new LongWritable(wordOccurrences));
+                    tripleValue.setC0(new LongWritable(C0));
+                }
 
-        else if (key.getThirdWord().equals("~")) {
-            // <w1,w2,~>
-            tripleValue.setC1(new LongWritable(wordOccurrences));
-            tripleValue.setC0(new LongWritable(C0));
-        }
-            // <w1,w2,w3>
-        else {
-            tripleValue.setN1(new LongWritable(wordOccurrences));
-            tripleValue.setC0(new LongWritable(C0));
-        }
+                if (!(key.getSecondWord().equals("~")) && !(key.getFirstWord().equals("$")))
+                    context.write(key, tripleValue);
 
-        if (!(key.getSecondWord().equals("~")) && !(key.getFirstWord().equals("$")))
-            context.write(new Text(key.toString()),new Text(tripleValue.toString()));
 
     }
 

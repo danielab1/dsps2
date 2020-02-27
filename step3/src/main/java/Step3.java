@@ -19,17 +19,18 @@ public class Step3 {
 
         // set mapper and reducer
         job.setMapperClass(MapperClass.class);
-        job.setMapOutputValueClass(Text.class);
+        job.setMapOutputKeyClass(TripleKey.class);
+        job.setMapOutputValueClass(TripleValue.class);
 
         job.setReducerClass(ReducerClass.class);
 
 
-        job.setInputFormatClass(TextDoubleInputFormat.class);
-        FileInputFormat.addInputPath(job,  new Path(args[0]));
+        job.setInputFormatClass(KeyValueTextInputFormat.class);
+        FileInputFormat.addInputPath(job,  new Path(args[1]));
 
         // set output
         job.setOutputFormatClass(TextOutputFormat.class);
-        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+        FileOutputFormat.setOutputPath(job, new Path(args[2]));
 
         // wait for completion and exit
         System.exit(job.waitForCompletion(true) ? 0 : 1);

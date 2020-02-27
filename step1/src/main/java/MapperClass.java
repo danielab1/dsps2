@@ -12,11 +12,12 @@ public class MapperClass extends Mapper<LongWritable, Text, TripleKey, TripleVal
     private static long C0;
     private  static final int NUM_OF_REDUCERS = 2;
 
+    @Override
     protected void setup(Context context) {
         Configuration conf = context.getConfiguration();
         C0 = 0;
     }
-
+        @Override
     public void map(LongWritable key, Text value, Context context) throws IOException,  InterruptedException {
         // value: n-gram \t year \t occurrences \t volume_count \n
         // tokenize the value using tab delimiter

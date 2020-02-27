@@ -4,6 +4,7 @@ import org.apache.hadoop.io.WritableComparable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
+import java.io.EOFException;
 import java.io.IOException;
 
 
@@ -28,10 +29,15 @@ public class TripleKey implements WritableComparable<TripleKey> {
     }
 
 
+    public TripleKey() {
+        this(new Text(""), new Text(""), new Text(""));
+    }
+
     public void readFields(DataInput in) throws IOException {
-        firstWord.readFields(in);
-        secondWord.readFields(in);
-        thirdWord.readFields(in);
+            firstWord.readFields(in);
+            secondWord.readFields(in);
+            thirdWord.readFields(in);
+
     }
 
     public void write(DataOutput out) throws IOException {
@@ -41,7 +47,7 @@ public class TripleKey implements WritableComparable<TripleKey> {
     }
 
 
-    // we want to sort the word so that every <w2,w3> and <w1,w2,w3> will be after <w3,*>
+    // we want to sort the word so that every <w2,w3> will be before <w2,w3,x> to calc C2
     public int compareTo(TripleKey other) {
 
         // this <w1,w2,~>

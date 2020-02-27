@@ -12,7 +12,7 @@ public class ReducerClass extends Reducer<TripleKey, TripleValue, Text, DoubleWr
     private double C0;
     private double C1;
     private double C2;
-
+    // in this round we get N2 from the sort and we can calc the final probability
     @Override
     protected void reduce(TripleKey key, Iterable<TripleValue> values, Context context) throws IOException, InterruptedException {
 

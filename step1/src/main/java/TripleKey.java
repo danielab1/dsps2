@@ -79,7 +79,6 @@ class TripleKey implements WritableComparable<TripleKey> {
             // other is <w ~ ~ >
             if (isTilda(other.secondWord)) {
                 int a = this.firstWord.toString().compareTo(other.firstWord.toString());
-
                 System.out.println("4" + a);
                 return a;
             }
@@ -87,14 +86,11 @@ class TripleKey implements WritableComparable<TripleKey> {
             if (isTilda(other.thirdWord)) {
                 //and other w2 == this w1
                 if (other.secondWord.toString().equals(this.firstWord.toString())) {
-
                     int a = -1;
-
                     System.out.println("5" + a);
                     return a;
                 }
                 int a = this.firstWord.toString().compareTo(other.secondWord.toString());
-
                 System.out.println("6" + a);
                 return a;
             }
@@ -161,7 +157,7 @@ class TripleKey implements WritableComparable<TripleKey> {
                 // other is <w1,~,~> and other.w1 = this.w3
                 if (other.firstWord.toString().equals(this.thirdWord.toString()))
                 {
-                    int a =1;
+                    int a = 1;
                     System.out.println("14" + a);
                     return a;
                 }
@@ -177,7 +173,7 @@ class TripleKey implements WritableComparable<TripleKey> {
                 // other.w2 == this.w3
                 if (this.thirdWord.toString().equals(other.secondWord.toString()))
                 {
-                    int a = -1;
+                    int a = 1;
                     System.out.println("16" + a);
                     return a;
                 }

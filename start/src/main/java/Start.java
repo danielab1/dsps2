@@ -102,10 +102,10 @@ public class Start {
 
         // Create a flow request including all the Steps
         RunJobFlowRequest runFlowRequest = new RunJobFlowRequest()
-                .withName("start_now")
+                .withName("step4_test")
                 .withInstances(instances)
 //                .withSteps(stepConfig1,stepConfig2,stepConfig3,stepConfig4)
-                .withSteps(stepConfig1)
+                .withSteps(stepConfig4)
                 .withReleaseLabel("emr-5.20.0")
                 .withLogUri(LOG_DIR)
                 .withServiceRole("EMR_DefaultRole")

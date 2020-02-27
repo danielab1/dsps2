@@ -40,15 +40,15 @@ public class SortingKey implements WritableComparable<SortingKey> {
     }
 
     public void write(DataOutput dataOutput) throws IOException {
-        this.prob.write(dataOutput);
         this.firstTwoWords.write(dataOutput);
         this.thirdWord.write(dataOutput);
+        this.prob.write(dataOutput);
     }
 
     public void readFields(DataInput dataInput) throws IOException {
-        this.prob.readFields(dataInput);
         this.firstTwoWords.readFields(dataInput);
         this.thirdWord.readFields(dataInput);
+        this.prob.readFields(dataInput);
     }
 
     public DoubleWritable getProb() {

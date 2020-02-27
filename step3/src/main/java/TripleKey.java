@@ -26,7 +26,9 @@ public class TripleKey implements WritableComparable<TripleKey> {
     public TripleKey(Text firstWord) {
         this(firstWord, new Text("~"), new Text("~"));
     }
-
+    public TripleKey() {
+        this(new Text(""), new Text(""), new Text(""));
+    }
 
     public void readFields(DataInput in) throws IOException {
         firstWord.readFields(in);

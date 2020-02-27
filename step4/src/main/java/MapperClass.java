@@ -6,14 +6,15 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
 
-public class MapperClass extends Mapper<Text, DoubleWritable, SortingKey, Text> {
+public class MapperClass extends Mapper<Text, Text, SortingKey, Text> {
 
     @Override
-    protected void map(Text key, DoubleWritable value, Context context) throws IOException, InterruptedException {
-        String[] splited = key.toString().split("\\s+");
-        Text firstTwoWords = new Text(splited[0] + " " + splited[1]);
-        Text lastWord = new Text(splited[2]);
+    protected void map(Text key, Text value, Context context) throws IOException, InterruptedException {
+        String [] keyWords = key.toString().split(" ");
+        DoubleWritable val = new DoubleWritable(Double.parseDouble(value.toString()));
+        Text firstTwoWords = new Text(keyWords[0] + " " + keyWords[1]);
+        Text lastWord = new Text (keyWords[2]);
 
-        context.write(new SortingKey(firstTwoWords,lastWord,value),new Text(""));
+        context.write(new SortingKey(firstTwoWords,lastWord,val),new Text(""));
     }
 }

@@ -25,6 +25,7 @@ public class TripleValue implements Writable {
         this.C2= value.C2;
     }
 
+
     public void setOccurrences(LongWritable occurrences) {
         this.occurrences = occurrences;
     }
@@ -107,6 +108,7 @@ public class TripleValue implements Writable {
     }
 
     public void write(DataOutput dataOutput) throws IOException {
+        this.occurrences.write(dataOutput);
         this.N1.write(dataOutput);
         this.N2.write(dataOutput);
         this.N3.write(dataOutput);
@@ -123,5 +125,10 @@ public class TripleValue implements Writable {
         this.C0.readFields(dataInput);
         this.C1.readFields(dataInput);
         this.C2.readFields(dataInput);
+    }
+
+    public String toString(){
+        return occurrences.get() + " "+
+                N1.get()+ " " +N2.get() +" " +N3.get() +" " +C0.get()  +" "+C1.get() +" " +C2.get();
     }
 }
