@@ -26,7 +26,7 @@ public class ReducerClass extends Reducer<TripleKey, TripleValue, TripleKey, Tri
                     tripleValue.N1 = tripleValue.Add(tripleValue.N1, value.N1);
                     tripleValue.C1 = tripleValue.Add(tripleValue.C1, value.C1);
                 }
-                if (key.getFirstWord().equals("$")) {
+                if (key.getFirstWord().equals("$$$")) {
                     C0 = tripleValue.occurrences.get();
                 }
                 if (key.getSecondWord().equals("~"))
@@ -43,7 +43,7 @@ public class ReducerClass extends Reducer<TripleKey, TripleValue, TripleKey, Tri
                     tripleValue.setC0(new LongWritable(C0));
                 }
 
-                if (!(key.getSecondWord().equals("~")) && !(key.getFirstWord().equals("$")))
+                if (!(key.getSecondWord().equals("~")) && !(key.getFirstWord().equals("$$$")))
                     context.write(key, tripleValue);
 
 

@@ -6,8 +6,10 @@
         <artifactId>dsps2</artifactId>
         <groupId>dsps2</groupId>
         <version>1.0-SNAPSHOT</version>
+
     </parent>
     <modelVersion>4.0.0</modelVersion>
+
     <properties>
         <maven.compiler.release>11</maven.compiler.release>
     </properties>

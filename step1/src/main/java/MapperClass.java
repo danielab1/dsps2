@@ -10,7 +10,7 @@ import java.util.Arrays;
 public class MapperClass extends Mapper<LongWritable, Text, TripleKey, TripleValue> {
 
     private static long C0;
-    private  static final int NUM_OF_REDUCERS = 2;
+    private  static final int NUM_OF_REDUCERS = 20;
 
     @Override
     protected void setup(Context context) {
@@ -58,7 +58,7 @@ public class MapperClass extends Mapper<LongWritable, Text, TripleKey, TripleVal
     @Override
     protected void cleanup(Context context) throws IOException, InterruptedException {
         for(int i=0; i< NUM_OF_REDUCERS ; i++) {
-            context.write(new TripleKey(new Text("$"), new Text(String.valueOf(i)), new Text("$")),
+            context.write(new TripleKey(new Text("$$$"), new Text(String.valueOf(i)), new Text("$$$")),
                     new TripleValue(new LongWritable(C0)));
         }
    }

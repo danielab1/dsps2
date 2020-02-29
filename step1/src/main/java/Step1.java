@@ -23,7 +23,7 @@ public class Step1 {
         job.setMapperClass(MapperClass.class);
         job.setMapOutputKeyClass(TripleKey.class);
         job.setMapOutputValueClass(TripleValue.class);
-        job.setNumReduceTasks(2);
+        job.setNumReduceTasks(20);
         job.setReducerClass(ReducerClass.class);
 
 
@@ -38,7 +38,7 @@ public class Step1 {
 
 
         // set input
-//        job.setInputFormatClass(SequenceFileInputFormat.class);
+        job.setInputFormatClass(SequenceFileInputFormat.class);
         FileInputFormat.addInputPath(job,new Path(args[0]));
         FileInputFormat.addInputPath(job,new Path(args[1]));
         FileInputFormat.addInputPath(job,new Path(args[2]));
@@ -46,6 +46,9 @@ public class Step1 {
         // set output
         job.setOutputFormatClass(TextOutputFormat.class);
         FileOutputFormat.setOutputPath(job, new Path(args[3]));
+        if (args[4].equals("true")) {
+            job.setCombinerClass(ReducerClass.class);
+        }
 
         // wait for completion and exit
         System.exit(job.waitForCompletion(true) ? 0 : 1);

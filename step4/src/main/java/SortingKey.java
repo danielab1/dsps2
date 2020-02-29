@@ -35,7 +35,12 @@ public class SortingKey implements WritableComparable<SortingKey> {
         if(firstTwoWords.toString().compareTo(other.getFirstTwoWords().toString()) < 0)
             return -1;
 
-        return Double.compare(this.prob.get(), other.getProb().get());
+        int val = Double.compare(this.prob.get(), other.getProb().get());
+        if (val ==  -1 )        // this means that the prob is smaller than we want it to be bigger(at the end)
+            return 1;
+        else if (val == 1)      // this means that the prob is bigger than we want if to be first
+            return -1;
+        else return 0;
 
     }
 

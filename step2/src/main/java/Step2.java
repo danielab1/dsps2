@@ -27,7 +27,6 @@ public class Step2 {
         job.setReducerClass(ReducerClass.class);
         job.setPartitionerClass(PartitionerClass.class);
 
-
         // set input
         job.setInputFormatClass(KeyValueTextInputFormat.class);
         FileInputFormat.addInputPath(job,  new Path(args[1]));
