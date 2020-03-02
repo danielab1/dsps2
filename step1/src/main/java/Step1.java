@@ -23,7 +23,7 @@ public class Step1 {
         job.setMapperClass(MapperClass.class);
         job.setMapOutputKeyClass(TripleKey.class);
         job.setMapOutputValueClass(TripleValue.class);
-        job.setNumReduceTasks(20);
+        job.setNumReduceTasks(30);
         job.setReducerClass(ReducerClass.class);
 
 

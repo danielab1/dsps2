@@ -10,7 +10,7 @@ import java.util.Arrays;
 public class MapperClass extends Mapper<LongWritable, Text, TripleKey, TripleValue> {
 
     private static long C0;
-    private  static final int NUM_OF_REDUCERS = 20;
+    private  static final int NUM_OF_REDUCERS = 30;
 
     @Override
     protected void setup(Context context) {
