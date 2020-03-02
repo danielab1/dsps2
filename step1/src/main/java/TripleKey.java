@@ -47,30 +47,22 @@ class TripleKey implements WritableComparable<TripleKey> {
 
     // we want to sort the word so that every <w2,w3> and <w1,w2,w3> will be after <w3,*>
     public int compareTo(TripleKey other) {
-        System.out.println("this: ----- " + this.toString() + " other is: ---- " + other.toString());
 
         if ((isDollar(this.firstWord)) && (isDollar(other.firstWord))) {
-            int a = 0;
-            System.out.println("0 " + a);
-            return a;
+            return 0;
 
         }
         // case of c0
         if (isDollar(this.firstWord)) {
-            int a = -1;
-            System.out.println("1" + a);
-            return a;
+            return -1;
         }
         if (isDollar(other.firstWord)) {
 
-            int a = 1;
-            System.out.println("2" + a);
-            return a;
+            return 1;
+
         }
         if (this.toString().equals(other.toString())) {
-            int a = 0;
-            System.out.println("3" + a);
-            return a;
+            return 0;
         }
 
 
@@ -78,33 +70,24 @@ class TripleKey implements WritableComparable<TripleKey> {
         if (isTilda(this.secondWord)) {
             // other is <w ~ ~ >
             if (isTilda(other.secondWord)) {
-                int a = this.firstWord.toString().compareTo(other.firstWord.toString());
-                System.out.println("4" + a);
-                return a;
+                return this.firstWord.toString().compareTo(other.firstWord.toString());
+
             }
             // case other is <w1, w2, ~>
             if (isTilda(other.thirdWord)) {
                 //and other w2 == this w1
                 if (other.secondWord.toString().equals(this.firstWord.toString())) {
-                    int a = -1;
-                    System.out.println("5" + a);
-                    return a;
+                    return -1;
                 }
-                int a = this.firstWord.toString().compareTo(other.secondWord.toString());
-                System.out.println("6" + a);
-                return a;
+                return this.firstWord.toString().compareTo(other.secondWord.toString());
             }
 
             // case other <wx,w2,w3> , and other.w3 = this.w1
             if (other.thirdWord.toString().equals(this.firstWord.toString())) {
-                int a = -1;
-                System.out.println("7" + a);
-                return a;
+                return -1;
             }
             // case other <wx,wy,wz> and other wz ! = this.w1
-            int a = this.firstWord.toString().compareTo(other.thirdWord.toString());
-            System.out.println("8" + a);
-            return a;
+            return this.firstWord.toString().compareTo(other.thirdWord.toString());
         }
         //case this <w1, w2,~>
         else if (isTilda(this.thirdWord)) {
@@ -112,28 +95,21 @@ class TripleKey implements WritableComparable<TripleKey> {
             if (isTilda(other.secondWord)) {
                 if (other.firstWord.toString().equals(this.secondWord.toString()))
                 {
-                    int a = 1;
-                    System.out.println("8" + a);
-                    return a;
+                    return 1;
                 }
-                int a = this.secondWord.toString().compareTo(other.firstWord.toString());
-                System.out.println("9" + a);
-                return a;
+                return this.secondWord.toString().compareTo(other.firstWord.toString());
 
             }
             //case other <wx,wy,~>
             if (isTilda(other.thirdWord)) {
                 if (other.secondWord.toString().equals(this.secondWord.toString()))
                 {
-                    int a = this.firstWord.toString().compareTo(other.firstWord.toString());
-                    System.out.println("10" + a);
-                    return a;
+                    return this.firstWord.toString().compareTo(other.firstWord.toString());
                 }
                 else
                 {
-                    int a = this.secondWord.toString().compareTo(other.secondWord.toString());
-                    System.out.println("11" + a);
-                    return a;
+                   return this.secondWord.toString().compareTo(other.secondWord.toString());
+
 
                 }
 
@@ -141,14 +117,11 @@ class TripleKey implements WritableComparable<TripleKey> {
             //case other <wx,wy,wz> and other.wz == this.w2
             else if (other.thirdWord.toString().equals(this.secondWord.toString()))
             {
-                int a =-1;
-                System.out.println("12" + a);
-                return a;
+                return -1;
             }
             // case other.wz !  = this.w2
-            int a =this.secondWord.toString().compareTo(other.thirdWord.toString());
-            System.out.println("13" + a);
-            return a;
+            return this.secondWord.toString().compareTo(other.thirdWord.toString());
+
         }
         // case this <w1,w2,w3>
         else {
@@ -157,14 +130,10 @@ class TripleKey implements WritableComparable<TripleKey> {
                 // other is <w1,~,~> and other.w1 = this.w3
                 if (other.firstWord.toString().equals(this.thirdWord.toString()))
                 {
-                    int a = 1;
-                    System.out.println("14" + a);
-                    return a;
+                    return 1;
                 }
                 else{
-                    int a = this.thirdWord.toString().compareTo(other.firstWord.toString());
-                    System.out.println("15" + a);
-                    return a;
+                   return this.thirdWord.toString().compareTo(other.firstWord.toString());
                 }
 
             }
@@ -173,32 +142,26 @@ class TripleKey implements WritableComparable<TripleKey> {
                 // other.w2 == this.w3
                 if (this.thirdWord.toString().equals(other.secondWord.toString()))
                 {
-                    int a = 1;
-                    System.out.println("16" + a);
-                    return a;
+                    return 1;
                 }
                 // other.w2!=this.w3
-                int a = this.thirdWord.toString().compareTo(other.secondWord.toString());
-                System.out.println("17" + a);
-                return a;
+               return this.thirdWord.toString().compareTo(other.secondWord.toString());
+
             }
             //other is <wx,wy,wz>
             if (this.thirdWord.toString().equals(other.thirdWord.toString())) {
                 if (this.secondWord.toString().equals(other.secondWord.toString()))
                 {
-                    int a = this.firstWord.toString().compareTo(other.firstWord.toString());
-                    System.out.println("18" + a);
-                    return a;
+                    return this.firstWord.toString().compareTo(other.firstWord.toString());
+
                 }
                 else{
-                    int a = this.secondWord.toString().compareTo(other.secondWord.toString());
-                    System.out.println("19" + a);
-                    return a;
+                    return this.secondWord.toString().compareTo(other.secondWord.toString());
+
                 }
             }
-            int a = this.thirdWord.toString().compareTo(other.thirdWord.toString());
-            System.out.println("20" + a);
-            return a;
+            return this.thirdWord.toString().compareTo(other.thirdWord.toString());
+
 
         }
     }
@@ -225,7 +188,7 @@ class TripleKey implements WritableComparable<TripleKey> {
 
     private boolean isDollar(Text word) {
 
-        return word.toString().equals("$");
+        return word.toString().equals("$$$");
     }
 
     @Override

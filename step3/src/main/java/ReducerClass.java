@@ -35,8 +35,6 @@ public class ReducerClass extends Reducer<TripleKey, TripleValue, Text, DoubleWr
             double K3 = (Math.log10(N3 + 1) + 1) / (Math.log10(N3 + 1) + 2);
             probability = K3 * (N3 / C2) + (1 - K3) * K2 * (N2 / C1) + (1 - K3) * (1 - K2) * (N1 / C0);
 
-            if (Double.isInfinite(probability))
-                probability = 1;
             context.write(new Text(key.toString()), new DoubleWritable(probability));
 
         }
