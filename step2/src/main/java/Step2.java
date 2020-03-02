@@ -35,6 +35,10 @@ public class Step2 {
         job.setOutputFormatClass(TextOutputFormat.class);
         FileOutputFormat.setOutputPath(job, new Path(args[2]));
 
+        if (args[3].equals("agg")) {
+            job.setCombinerClass(ReducerClass.class);
+        }
+
         // wait for completion and exit
         System.exit(job.waitForCompletion(true) ? 0 : 1);
     }

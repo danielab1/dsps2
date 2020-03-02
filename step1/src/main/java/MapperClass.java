@@ -29,6 +29,10 @@ public class MapperClass extends Mapper<LongWritable, Text, TripleKey, TripleVal
         // parse the n-gram
         String ngram = split_line[0];
 
+            if (!onlyLettersAndSpace(ngram)) {
+                return;
+            }
+
         // parse the occurrences
 
         LongWritable occurrences = new LongWritable(Long.parseLong(split_line[2]));
@@ -62,6 +66,18 @@ public class MapperClass extends Mapper<LongWritable, Text, TripleKey, TripleVal
                     new TripleValue(new LongWritable(C0)));
         }
    }
+    private static boolean isLetterOrSpace(char c) {
+        return ((c >= (char)1488 && c <= (char)1514) || c == ' ');
+    }
+
+    private static boolean onlyLettersAndSpace(String string) {
+        for (int i=0; i<string.length(); i++) {
+            if (!isLetterOrSpace(string.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
 
 
 }

@@ -46,7 +46,7 @@ public class Step1 {
         // set output
         job.setOutputFormatClass(TextOutputFormat.class);
         FileOutputFormat.setOutputPath(job, new Path(args[3]));
-        if (args[4].equals("true")) {
+        if (args[4].equals("agg")) {
             job.setCombinerClass(ReducerClass.class);
         }
 

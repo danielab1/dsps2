@@ -35,10 +35,10 @@ public class ReducerClass extends Reducer<TripleKey, TripleValue, Text, DoubleWr
             try{
                 probability = K3 * (N3 /C2) + (1-K3) * K2*(N2/C1) + (1-K3)* (1-K2) * (N1/C0);
 
-            }
-            catch (MathArithmeticException e){
-                System.out.println("divided in zero");
-            }
+                    }
+                    catch (MathArithmeticException e){
+                        System.out.println("divided in zero");
+                    }
 
                 context.write(new Text(key.toString()), new DoubleWritable(probability));
 

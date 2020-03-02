@@ -72,7 +72,7 @@ public class Start {
                 .withHadoopJarStep(new HadoopJarStepConfig()
                         .withJar(STEP2_JAR)
                         .withMainClass("Step2")
-                        .withArgs(STEP1_OUTPUT, STEP2_OUTPUT));
+                        .withArgs(STEP1_OUTPUT, STEP2_OUTPUT,localAggregation));
 
         // Configure third step, input is the output of second step
         StepConfig stepConfig3 = new StepConfig()
